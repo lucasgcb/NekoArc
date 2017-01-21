@@ -1,23 +1,16 @@
 const segundo = 1000;
 const minuto = (60 * segundo); //milisegundos
 const hora = (60 * minuto); //milisegundos
-var fs = require('fs');
-//const tempoLimite = (2 * minuto);
 
 function utilitarios()
 {   
     this.limpeza = function limpeza(bot,servidor,canal,tempoLimite,ultimaID)
     {
-        //if(!fs.exists("./tmp/ultimaID.txt"))
-            parametrosPesquisa={limit: 100};
-        /*else
-            ultimaID = lerArquivo("./tmp/ultimaID.txt");
-            parametrosPesquisa={limit: 100, before:ultimaID};*/
+        parametrosPesquisa={limit: 100};
         canal.fetchMessages(parametrosPesquisa) //A API da Discord tem um limite de 100 requests, mas a demora faz com que promises repetidas surjam para mensagens no limite.
         .then(mensagens => 
         {
             let registroMensagens=mensagens.array();
-            //console.log(registroMensagens[0]);
             for (var i=0; i<registroMensagens.length; i++)
             {
                 if(registroMensagens[i]!=null)
@@ -32,9 +25,6 @@ function utilitarios()
                             .then(nota => {console.log(`Mensagem deletada: [${nota.id}]${nota.author.username}:${nota.content}`)})
                             .catch( err => {console.log(`Erro ao deletar mensagem. Provavelmente já foi deletada.`)});
                         }
-                        else
-                        {} //escreverArquivo(registroMensagens[i].id)
-                            
                     }
                     else
                     {} //sem operação
@@ -59,9 +49,7 @@ function utilitarios()
                 for (var i=0; i<registroMensagens.length; i++)
                 {
                     let dataAtual = new Date();
-                    //console.log(i);
-                    //console.log("length:" + registroMensagens.length);
-                    if(registroMensagens[i].author.id==bot.user.id) //do stuff with the bot's own message
+                    if(registroMensagens[i].author.id==bot.user.id)
                         if(!registroMensagens[i].pinned) 
                         {
                             pinExiste=false;
@@ -72,13 +60,9 @@ function utilitarios()
                             let stringEnorme= `${dataAtual.getDate()}/${dataAtual.getMonth() + 1}/${dataAtual.getFullYear()} às ${ajusteMilitar(dataAtual.getHours())}:${ajusteMilitar(dataAtual.getMinutes())}]`;
                             let stringEnorme2= `${calculo(tempoLimite)} ${tempoLimite[1]}].\nUltimo check foi em: `
                             let argumentos = registroMensagens[i].content.split("[");
-                            //console.log("ajuste:" + ajusteMilitar(dataAtual.getHours()) );
                             let atualizado = registroMensagens[i].content.replace(argumentos[1], stringEnorme2);
-                            //console.log("atualizadoVAR:" + atualizado);
                             atualizado = atualizado.replace(argumentos[2], stringEnorme);
-                            //console.log(atualizado);
-                            //console.log("atualizadoVAR:" + argumentos[1]);
-                            registroMensagens[0].edit(atualizado);
+                            registroMensagens[0].edit(atualizado).catch( err => {console.log(`Erro em atualizar`)});;
                             console.log(`Check em [${stringEnorme}`)
                         }
                     else
@@ -107,7 +91,6 @@ function utilitarios()
             console.log("O servidor está indisponível.")
         else
         {
-            //console.log(servidor.name)
             let canal = servidor.channels.get(canalMatchmaking);
             if (canal==null)
                 console.log("O canal está indisponível.")
@@ -123,11 +106,9 @@ function utilitarios()
                         for (var i=0; i<registroMensagens.length; i++)
                         {
                             let dataAtual = new Date();
-                            //console.log(i);
-                            //console.log("length:" + registroMensagens.length);
                             if(registroMensagens[i].author.id==bot.user.id)
                             {
-                                registroMensagens[i].delete();
+                                registroMensagens[i].delete().catch( err => {console.log(`Erro ao deletar mensagem. Provavelmente já foi deletada.`)});;
                             }
                         }
                     }
@@ -137,16 +118,16 @@ function utilitarios()
     }
 }
 
-function lerArquivo(arquivo)
+/*function lerArquivo(arquivo)
 {
     fs.readFile(arquivo, (err, data) => 
     {
         if (err) return 0;
         else return data;
     });
-}
+}*/
 
-function escreverArquivo(data)
+/*function escreverArquivo(data)
 {
     fs.writeFile('./tmp/ultimaID.js', data, (err) => {
         if (err)
@@ -154,7 +135,7 @@ function escreverArquivo(data)
         else
             console.log('It\'s saved!');
     });
-}
+}*/
 
 function ajusteMilitar(tempo) //Ajusta o tempo para sempre haverem 2 dígitos.
 {

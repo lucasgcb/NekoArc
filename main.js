@@ -1,12 +1,11 @@
 const Discord = require("discord.js");
 const bot = new Discord.Client(); //construtor da classe Client para o bot da Discord API
-var canalMatchmaking = '272114679306911750';
 const servidorPrincipal = '266619332186865675';
 const util = require("./utilitarios.js");
-const utilFun = new util();
+const utilFun = new util(); //funções
 
-var fs = require('fs');
 var tempoLimite = util.minuto(10); //VARIAVEL GLOBAL PELOS HUES
+var canalMatchmaking = '272114679306911750';
 
 bot.login("MjcyMDI0NjAyMTk5MTk1NjQ4.C2QUKw.5lDgDo61K6nIp0WyEUdnn2OCve8");
 bot.once("ready", () => 
@@ -17,26 +16,18 @@ bot.once("ready", () =>
         console.log("O servidor está indisponível.")
     else
     {
-        console.log(servidor.name)
+        console.log("Servidor principal:" + servidor.name)
         let canal = servidor.channels.get(canalMatchmaking);
         if (canal==null)
             console.log("O canal está indisponível.")
         else
         {
-            console.log(util.minuto(1)[0]);
-            /*fs.unlink('./tmp/ultimaID.js', (err) => 
-            {
-                if(!err)
-                    console.log('successfully deleted /tmp/ultimaID.js');
-                else
-                    console.log(err);
-            })*/
             setInterval(temporizador => {utilFun.notificador(bot,servidor,servidor.channels.get(canalMatchmaking),tempoLimite);}, util.segundo(25)[0]);
             setInterval(temporizador =>
             {
                 utilFun.limpeza(bot,servidor,servidor.channels.get(canalMatchmaking),tempoLimite);
             }, util.segundo(25)[0]);
-            console.log(canal.name);
+            console.log("Canal de Matchmaking:" + canal.name);
         }
     }
 });
@@ -75,7 +66,6 @@ function definirTempo(msg)
         if(argumentos[1]!=null && argumentos[2]!=null)
         {
             argumentos[1]=Math.round(argumentos[1]);
-            console.log(argumentos[2]);
             switch(argumentos[2])
             {
                 case 'hora': 

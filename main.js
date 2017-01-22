@@ -23,10 +23,7 @@ bot.once("ready", () =>
         else
         {
             setInterval(temporizador => {utilFun.notificador(bot,servidor,servidor.channels.get(canalMatchmaking),tempoLimite);}, util.segundo(25)[0]);
-            setInterval(temporizador =>
-            {
-                utilFun.limpeza(bot,servidor,servidor.channels.get(canalMatchmaking),tempoLimite);
-            }, util.segundo(25)[0]);
+            setInterval(temporizador => {utilFun.limpeza(bot,servidor,servidor.channels.get(canalMatchmaking),tempoLimite);}, util.segundo(25)[0]);
             console.log("Canal de Matchmaking:" + canal.name);
         }
     }
